@@ -86,6 +86,12 @@ helm upgrade --install gitlab gitlab/gitlab \
 --set prometheus.server.persistentVolume.storageClass=ceph-filesystem \
 -f values.yaml,persistent-volume.yaml
 ```
+- gitlab runner에서 gitlab-runner-certs 못찾는다는ㅇ ㅔ러 발생시 :
+  ca 파일을 이용해 아래 명령어로 secret 생성
+```
+kubectl create secret generic gitlab-runner-certs -n gitlab \
+--from-file=ca.crt
+```
 ### 1.6 gitlab 외부 접근을 위한 Ingress
 ```
 apiVersion: networking.k8s.io/v1
