@@ -137,3 +137,35 @@ kubectl get secret gitlab-gitlab-initial-root-password -n gitlab -ojsonpath='{.d
 ### 2.3 ui 접속 확인
 - gitlab.xxx.xyz로 접근
 - id: root, password:  생성한 비밀번호 
+- 
+### 2.4 Gitlab Runner 설정 변경
+- Gitlab Runner 설정 변경, Cert Manager로 생성 된 인증서가 아닌 Self Sign 인증서를 사용 할 경우 Gitlab Runner에서 아래와 같은 Error Meassge가 발생
+```
+Couldn't execute POST against https://xxx.com/api/v4/jobs/request: Post https://hostname.tld/api/v4/jobs/request: x509: certificate signed by unknown authority
+```
+- 위와 같은 에러 발생 시 Runner 아래 설정을 추가
+- CA 파일 Secret 생성 (이전 Harbor 설치 시 사용한 CA)
+```
+$ kubectl create secret generic gitlab-runner-certs \
+--from-file=ca.crt
+```
+- Runner Deployment Yaml File에 gitlab-runner-certs 인증서 Mount와 환경 변수 설정 후 Redeploy
+```
+volumeMounts:
+- mountPath: /etc/gitlab-runner/certs
+  name: gitlab-runner-certs
+volumes:
+- name: gitlab-runner-certs
+   secret:
+     defaultMode: 438
+     secretName: gitlab-runner-certs
+env:
+- name: CI_SERVER_TLS_CA_FILE
+  value: /etc/gitlab-runner/certs/xxx.xxx.leedh.cloud
+```
+- 위 설정 완료 후 Runner 실행 시 /etc/gitlab-runner/certs/xxx.xxx.leedh.cloud 파일을 읽어 오다 Permission Denie 에러가 발생 할 경우 아래 설정을 0, 0으로 변경하여 Pod Security 변경
+```
+securityContext:
+  fsGroup: 0
+  runAsUser: 0
+```
