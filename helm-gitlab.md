@@ -13,7 +13,7 @@ helm pull gitlab/gitlab-runner --untar
 
 ### 1.3 tls 인증서 생성
 ```
-kubectl create -n gitlab secret tls gitlab-tls --key eks.xxx.xyz.key --cert eks.xxx.xyz.crt
+kubectl create -n gitlab secret tls custom-ca --key eks.xxx.xyz.key --cert eks.xxx.xyz.crt
 ```
 
 ### 1.4 values.yaml 수정 ( values 파일 생성 )
