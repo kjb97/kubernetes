@@ -29,9 +29,9 @@ sudo sysctl --system
 - 설치 진행할 디렉토리로 설치 파일들 복사
 ```
 sudo mkdir /root/rke2-artifacts
-$ sudo cp rke2-images.linux-amd64.tar.zst /root/rke2-artifacts
-$ sudo cp rke2.linux-amd64.tar.gz /root/rke2-artifacts
-$ sudo cp sha256sum-amd64.txt /root/rke2-artifacts
+sudo cp rke2-images.linux-amd64.tar.zst /root/rke2-artifacts
+sudo cp rke2.linux-amd64.tar.gz /root/rke2-artifacts
+sudo cp sha256sum-amd64.txt /root/rke2-artifacts
 ```
 - 준비한 파일 디렉토리에 스크립트 실행
 ```
