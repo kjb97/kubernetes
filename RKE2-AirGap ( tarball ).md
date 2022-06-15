@@ -35,7 +35,7 @@ sudo cp sha256sum-amd64.txt /root/rke2-artifacts
 ```
 - 준비한 파일 디렉토리에 스크립트 실행
 ```
-INSTALL_RKE2_ARTIFACT_PATH=/root/rke2-artifact ssh install.sh
+INSTALL_RKE2_ARTIFACT_PATH=/root/rke2-artifacts sh install.sh
 ```
 
 ## 1. Master Node
