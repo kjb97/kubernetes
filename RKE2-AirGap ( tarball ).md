@@ -46,7 +46,7 @@ mkdir -p /etc/rancher/rke2
 cat << EOF >>  /etc/rancher/rke2/config.yaml
 write-kubeconfig-mode: "0644"
 profile: "cis-1.5"
-selinux: true
+selinux: false
 EOF
 ```
 - CIS mode enable selinux 설정
@@ -78,7 +78,7 @@ server:  https://master 노드 ip:9345
 # Token 값은 첫번 째 Node의 /var/lib/rancher/rke2/server/node-token 디렉토리 참조
 token:  K106b9afcb136aa3a088e508882ad4fa1f94b9d814f36cd7c85b8a5c87643510d16::server:ca24fd2bebf3d41ec7c180cceb3b2768 
 profile: "cis-1.5"
-selinux: true
+selinux: false
 EOF
 ```
 
