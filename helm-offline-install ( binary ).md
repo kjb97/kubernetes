@@ -11,6 +11,6 @@ tar -zxvf helm-v3.8.2-linux-amd64.tar.gz
 ```
 ### 3.  helm binary 파일 이동
 ```
-mv inux-amd64/helm /usr/local/bin/
+mv linux-amd64/helm /usr/local/bin/
 ```
 ### 4.  helm 확인
