@@ -1,6 +1,8 @@
 # Docker Offline Install (ubuntu)
 ### 1. Release 확인 및 다운
-[deb packages](https://download.docker.com/linux/ubuntu/dists/)
+[docker deb packages](https://download.docker.com/linux/ubuntu/dists/)
+[libseccomp deb packages](http://security.ubuntu.com/ubuntu/pool/main//libs/libseccomp/)
+
 
 ```
 wget http://security.ubuntu.com/ubuntu/pool/main//libs/libseccomp/libseccomp2_2.5.4-1ubuntu1_amd64.deb
