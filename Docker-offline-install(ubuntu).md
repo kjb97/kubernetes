@@ -28,3 +28,50 @@ sudo docker ps
 sudo docker --help
 등등
 ```
+# Private Registry
+### 1.이미지 준비
+- 외부 접속이 가능한 곳에서 공식 registry docker image를 가져와 save한다.
+```
+docker pull registry
+docker save -o registry.tar registry
+```
+- 폐쇄망 서버에 옮기고 load해서 이미지 압축해제
+```
+docker load -i registry.tar
+```
+- registry build
+```
+docker run -dit --name registry -p 5000:5000 registry
+```
+
+### 2. private registry로 push
+- 먼저 push할 이미지의 태그를 지정
+```
+# 이미 존재하는 이미지일 경우
+docker image tag nginx:latest 192.168.xx.xx:5000/test:1.0
+
+#새로 빌드하는 경우
+docker build --tag 192.168.xx.xx:5000/test:1.0 nginx
+```
+
+- push
+```
+docker push 192.168.xx.xx:5000/test:1.0
+```
+- pull
+```
+docker pull 192.168.xx.xx:5000/test:1.0
+```
+
+### 오류:  Get "https://192.168.xx.xx:5000/v2/": http: server gave HTTP response to HTTPS client 
+
+- /etc/docker 디렉터리에 daemon.json 파일을 추가
+
+```
+vi /etc/docker/daemon.json
+
+{
+
+"insecure-registries": ["192.xx.xx.xx:5000"]
+
+}
