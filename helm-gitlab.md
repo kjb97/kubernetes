@@ -8,12 +8,12 @@ kubectl create namespace gitlab
 ### 1.2 helm repo에 gitlab repo추가 및 pull
 ```
 helm repo add gitlab https://charts.gitlab.io
-helm pull gitlab/gitlab-runner --untar
+helm pull gitlab/gitlab --untar
 ```
 
 ### 1.3 tls 인증서 생성
 ```
-kubectl create -n gitlab secret tls custom-ca --key eks.xxx.xyz.key --cert eks.xxx.xyz.crt
+kubectl create -n gitlab secret tls custom-tls --key custom.key --cert custom.crt
 ```
 
 ### 1.4 values.yaml 수정 ( values 파일 생성 )
@@ -73,7 +73,7 @@ helm upgrade --install gitlab gitlab/gitlab \
 --set certmanager.install=false \
 --set nginx-ingress.enabled=false \
 --set global.ingress.configureCertmanager=false \
---set global.ingress.tls.secretName=custom-ca \
+--set global.ingress.tls.secretName=custom-tls \
 --set gitlab.gitlab-runner.certsSecretName="gitlab-runner-certs" \
 --set gitlab-runner.certsSecretName="gitlab-runner-certs" \
 --set gitlab-runner.runners.cache.cacheShared=true \
@@ -82,9 +82,9 @@ helm upgrade --install gitlab gitlab/gitlab \
 --set gitlab.gitlab-runner.certsSecretName="gitlab-runner-cert" \
 --set gitlab.gitaly.persistence.storageClass=ceph-filesystem \
 --set gitlab.gitaly.persistence.accessMode="ReadWriteMany" \
---set global.certificates.customCAs[0].secret=custom-ca \
+--set global.certificates.customCAs[0].secret=custom-tls \
 --set prometheus.server.persistentVolume.storageClass=ceph-filesystem \
--f values.yaml,persistent-volume.yaml
+-f values.yaml,persistent-volumes.yaml
 ```
 - gitlab runner에서 gitlab-runner-certs 못찾는다는ㅇ ㅔ러 발생시 :
   ca 파일을 이용해 아래 명령어로 secret 생성
