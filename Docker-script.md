@@ -18,6 +18,7 @@ for f in $dir/*.tar; do
 done
 ```
 - 실행 시에 directory 경로를 넘겨야 함
+- docker save할 때 버전 명시
 ```
 sh docker.sh /home/centos/
 ```
