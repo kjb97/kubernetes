@@ -45,11 +45,12 @@ INSTALL_RKE2_ARTIFACT_PATH=/root/rke2-artifacts sh install.sh
 mkdir -p /etc/rancher/rke2
 cat << EOF >>  /etc/rancher/rke2/config.yaml
 write-kubeconfig-mode: "0644"
-profile: "cis-1.5"
+profile: "cis-1.5"  #설정하게 되면 파드가 루트 권한을 가질 수 없게 설정 ( 파드 동작함에 있어서 권한 문제를 겪게 될 수 있다. )
 selinux: false
 EOF
 ```
 - CIS mode enable selinux 설정
+- 설정하게 되면 파드가 루트 권한을 가질 수 없게 설정 ( 파드 동작함에 있어서 권한 문제를 겪게 될 수 있다. )
 ```
 $ sudo cp -f /usr/local/share/rke2/rke2-cis-sysctl.conf /etc/sysctl.d/60-rke2-cis.conf
 $ sysctl -p /etc/sysctl.d/60-rke2-cis.conf
