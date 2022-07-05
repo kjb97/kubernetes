@@ -28,6 +28,12 @@ sudo docker ps
 sudo docker --help
 등등
 ```
+
+### 4. 사용자 권한 설정
+```
+sudo groupadd docker
+sudo usermod -aG docker $USER
+```
 # Private Registry
 ### 1.이미지 준비
 - 외부 접속이 가능한 곳에서 공식 registry docker image를 가져와 save한다.
