@@ -33,6 +33,8 @@ sudo docker --help
 ```
 sudo groupadd docker
 sudo usermod -aG docker $USER
+sudo service docker restart
+사용자 다시 로그인
 ```
 # Private Registry
 ### 1.이미지 준비
