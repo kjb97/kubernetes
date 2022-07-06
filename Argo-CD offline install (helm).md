@@ -19,46 +19,20 @@ helm pull argocd/argo-cd
 ```
 global:
   image:
-    repository: 10.250.xxx:5000
-    tag: ""
+    repository: harbor.jinseong.leedh.xyz/argo/quay.io/argoproj/argocd
+    tag: v2.4.0
 
 dex:
-  initImage:
-    repository: 10.250.xxx:5000/quay.io/argoproj/argocd
-    tag: v2.4.0
   image:
-    repository: 10.250.xxx:5000/ghcr.io/dexidp/dex
+    repository: harbor.jinseong.leedh.xyz/argo/ghcr.io/dexidp/dex
     tag: v2.30.2
 
-controller:
-  image:
-    repository: 10.250.xxx:5000/quay.io/argoproj/argocd
-    tag: v2.4.0
-
-applicationSet:
-  image:
-    repository: 10.250.xxx:5000/quay.io/argoproj/argocd
-    tag: v2.4.0
-
-repoServer:
-  image:
-    repository: 10.250.xxx:5000/quay.io/argoproj/argocd
-    tag: v2.4.0
-
-server:
-  image:
-    repository: 10.250.xxx:5000/quay.io/argoproj/argocd
-    tag: v2.4.0
 
 redis:
   image:
-    repository: 10.250.xxx:5000/redis
+    repository: harbor.jinseong.leedh.xyz/argo/redis
     tag: 7.0.0-alpine
 
-notifications:
-  image:
-    repository: 10.250.xxx:5000/quay.io/argoproj/argocd
-    tag: v2.4.0
 ```
 - 배포
 ```
