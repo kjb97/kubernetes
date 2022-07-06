@@ -49,7 +49,7 @@ docker load -i registry.tar
 ```
 - registry build
 ```
-docker run -dit --name registry -p 5000:5000 registry
+docker run -dit --name docker-registry -e  REGISTRY_STORAGE_DELETE_ENABLED=true --restart=always -p 5000:5000 -v /root/data:/var/lib/registry/docker/registry/v2 registry
 ```
 
 ### 2. private registry로 push
