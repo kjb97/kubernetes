@@ -16,8 +16,8 @@ helm pull gitlab/gitlab --untar
 kubectl create -n gitlab secret tls custom-tls --key custom.key --cert custom.crt
 ```
 
-### 1.4 values.yaml 수정 ( values 파일 생성 )
-- persistence 설정 ( persistent-volume.yaml )
+### 1.4 values.yaml 수정
+#### persistence 설정 ( persistent-volume.yaml )
 - accessMode, storageClass 설정
 ```
 grafana:
@@ -63,28 +63,211 @@ redis:
         - ReadWriteMany
       storageClass: ceph-filesystem
 ```
+#### image 설정 (setting-images.yaml)
+- 폐쇄망은 prive registry를 사용하기 때문에 일일이 이미지를 설정해줘야 함
+```
+cert-manager:
+  image:
+    repository: quay.io/jetstack/cert-manager-controller
+  webhook:
+    image:
+      repository: quay.io/jetstack/cert-manager-webhook
+
+gitlab:
+  prometheus:
+    server:
+      image:
+        repository: harbor.jinseong.leedh.xyz/gitlab/quay.io/prometheus/prometheus
+        tag: v2.31.1
+        pullPolicy: IfNotPresent
+  kas:
+    image:
+      repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/gitlab-kas
+      tag: v15.1.0
+      pullPolicy: IfNotPresent
+  gitlab-shell:
+    image:
+      repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/gitlab-shell
+      pullPolicy: IfNotPresent
+      tag: v14.7.4
+  gitaly:
+    image:
+      repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/gitaly
+      tag: v15.1.0
+      pullPolicy: IfNotPresent
+    init:
+      image:
+        repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/alpine-certificates
+        tag: 20191127-r2
+  gitlab-exporter:
+    image:
+      repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/gitlab-exporter
+      tag: 11.16.0
+      pullPolicy: IfNotPresent
+  migrations:
+    image:
+      repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/gitlab-toolbox-ce
+      tag: v15.0.3
+      pullPolicy: IfNotPresent
+    init:
+      image:
+        repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/alpine-certificates
+        tag: 20191127-r2
+  sidekiq:
+    init:
+      image:
+        repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/gitlab-sidekiq-ce
+        tag: v15.0.3
+    image:
+      repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/gitlab-sidekiq-ce
+      tag: v15.0.3
+  webservice:
+    init:
+      dependencies:
+        image:
+          repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/gitlab-webservice-ce
+          tag: v15.0.3
+    image:
+      repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/gitlab-webservice-ce
+      tag: v15.0.3
+    workhorse:
+      image: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/gitlab-workhorse-ce
+
+
+
+
+  global:
+    communityImages:
+      migrations:
+        repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/gitlab-toolbox-ce
+      sidekiq:
+        repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/gitlab-sidekiq-ce
+      toolbox:
+        repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/gitlab-toolbox-ce
+      webservice:
+        repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/gitlab-webservice-ce
+      workhorse:
+        repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/gitlab-workhorse-ce
+
+
+
+gitlab-runner:
+  gitlabUrl: http://gitlab.jinseong.leedh.xyz
+  image: harbor.jinseong.leedh.xyz/gitlab/gitlab/gitlab-runner:alpine-v15.0.0
+
+grafana:
+  image:
+    repository: grafana/grafana
+    tag: 7.5.5
+
+minio:
+  image: harbor.jinseong.leedh.xyz/gitlab/minio/minio
+  imageTag: RELEASE.2017-12-28T01-21-00Z
+  minioMc:
+    image: harbor.jinseong.leedh.xyz/gitlab/minio/mc
+    tag: RELEASE.2018-07-13T00-53-22Z
+
+postgresql:
+  image:
+    registry: harbor.jinseong.leedh.xyz
+    repository: gitlab/bitnami/postgresql
+    tag: 12.11.0-debian-11-r13
+  metrics:
+    image:
+      registry: harbor.jinseong.leedh.xyz
+      repository: gitlab/bitnami/postgres-exporter
+      tag: 0.8.0-debian-10-r99
+      pullPolicy: IfNotPresent
+
+redis:
+  image:
+    registry: harbor.jinseong.leedh.xyz
+    repository: gitlab/bitnami/redis
+    tag: 6.0.9-debian-10-r0
+  metrics:
+    image:
+      registry: harbor.jinseong.leedh.xyz
+      repository: gitlab/bitnami/redis-exporter
+      tag: 1.12.1-debian-10-r11
+      pullPolicy: IfNotPresent
+
+registry:
+  image:
+    repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/gitlab-container-registry
+    tag: v3.48.0-gitlab
+
+prometheus:
+  server:
+    image:
+      repository: harbor.jinseong.leedh.xyz/gitlab/quay.io/prometheus/prometheus
+      tag: v2.31.1
+      pullPolicy: IfNotPresent
+  configmapReload:
+    prometheus:
+      image:
+        repository: harbor.jinseong.leedh.xyz/gitlab/jimmidyson/configmap-reload
+        tag: v0.5.0
+        pullPolicy: IfNotPresent
+
+global:
+  edition: ce
+  hosts:
+    domain: jinseong.leedh.xyz
+    gitlab:
+      name: gitlab.jinseong.leedh.xyz
+      https: true
+    registry:
+      name: registry.jinseong.leedh.xyz
+      https: true
+    minio:
+      name: minio.jinseong.leedh.xyz
+      https: true
+  ingress:
+    configureCertmanager: false
+    class: "nginx"
+    tls:
+      enable: false
+  certificates:
+    image:
+      repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/alpine-certificates
+      tag: 20191127-r2@sha256:56d3c0dbd1d425f24b21f38cb8d68864ca2dd1a3acc28b65d0be2c2197819a6a
+      pullPolicy: IfNotPresent
+  kubectl:
+    image:
+      repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/build/cng/kubectl
+      tag: 1.18.20@sha256:aebdfcf7bde7b80ad5eef7a472d1128542c977dc99b50c3e471fc98afbb9f52c
+      pullPolicy: IfNotPresent
+  busybox:
+    image:
+      repository: harbor.jinseong.leedh.xyz/gitlab/registry.gitlab.com/gitlab-org/cloud-native/mirror/images/busybox
+      tag: latest
+      pullPolicy: IfNotPresent
+
+upgradeCheck:
+  enabled: true
+  image:
+    repository:
+    tag:
+    pullPolicy: IfNotPresent
+
+shared-secrets:
+  selfsign:
+    image:
+      pullPolicy: IfNotPresent
+      repository:
+      tag:
+
+certmanager:
+  install: false
+
+nginx-ingress:
+  enabled: false
+```
 
 ### 1.5 배포 
 - helm upgrade
 ```
-helm upgrade --install gitlab gitlab/gitlab \
---namespace=gitlab \
---set gitlab-runner.install=true \
---set certmanager.install=false \
---set nginx-ingress.enabled=false \
---set global.ingress.configureCertmanager=false \
---set global.ingress.tls.secretName=custom-tls \
---set gitlab.gitlab-runner.certsSecretName="gitlab-runner-certs" \
---set gitlab-runner.certsSecretName="gitlab-runner-certs" \
---set gitlab-runner.runners.cache.cacheShared=true \
---set gitlab-runner.runners.cache.secretName=gitlab-minio-secret \
---set gitlab-runner.runners.cache.s3CachePath=runner-cache \
---set gitlab.gitlab-runner.certsSecretName="gitlab-runner-cert" \
---set gitlab.gitaly.persistence.storageClass=ceph-filesystem \
---set gitlab.gitaly.persistence.accessMode="ReadWriteMany" \
---set global.certificates.customCAs[0].secret=custom-tls \
---set prometheus.server.persistentVolume.storageClass=ceph-filesystem \
--f values.yaml,persistent-volumes.yaml
+
 ```
 - gitlab runner에서 gitlab-runner-certs 못찾는다는ㅇ ㅔ러 발생시 :
   ca 파일을 이용해 아래 명령어로 secret 생성
