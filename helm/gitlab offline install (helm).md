@@ -265,7 +265,14 @@ nginx-ingress:
 ### 1.5 배포 
 - helm upgrade
 ```
-
+helm upgrade --install gitlab . --namespace gitlab  \
+--set gitlab-runner.install=true \
+--set certmanager.install=false \
+--set global.ingress.configureCertmanager=false \
+--set nginx-ingress.enabled=false \
+--set global.ingress.tls.secretName=custom-tls \
+--set global.certificates.customCAs[0].secret=custom-tls \
+-f values.yaml,setting-values.yaml
 ```
 - gitlab runner에서 gitlab-runner-certs 못찾는다는ㅇ ㅔ러 발생시 :
   ca 파일을 이용해 아래 명령어로 secret 생성
