@@ -58,50 +58,39 @@ mv rke /usr/bin/rke
 ```
 # rke cluster.yml 설정 ( [] 안의 값이 현재 값이고 하나씩 원하는 데로 설정 )
 rke config
-
 [+] Cluster Level SSH Private Key Path [~/.ssh/id_rsa]:
-
-[+] Number of Hosts [1]:
-
-[+] SSH Address of host (1) [none]: 192.168.253.140
-
+[+] Number of Hosts [1]: 2
+[+] SSH Address of host (1) [none]: 10.250.201.55
 [+] SSH Port of host (1) [22]:
-
-[+] SSH Private Key Path of host (192.168.253.140) [none]: ~/.ssh/id_rsa
-
-[+] SSH User of host (192.168.253.140) [ubuntu]: centos
-
-[+] Is host (192.168.253.140) a Control Plane host (y/n)? [y]:
-
-[+] Is host (192.168.253.140) a Worker host (y/n)? [n]: y
-
-[+] Is host (192.168.253.140) an etcd host (y/n)? [n]: y
-
-[+] Override Hostname of host (192.168.253.140) [none]:
-
-[+] Internal IP of host (192.168.253.140) [none]: 192.168.253.140
-
-[+] Docker socket path on host (192.168.253.140) [/var/run/docker.sock]:
-
-[+] Network Plugin Type (flannel, calico, weave, canal) [canal]: calico
-
+[+] SSH Private Key Path of host (10.250.201.55) [none]: ~/.ssh/id_rsa
+[+] SSH User of host (10.250.201.55) [ubuntu]: centos
+[+] Is host (10.250.201.55) a Control Plane host (y/n)? [y]: y
+[+] Is host (10.250.201.55) a Worker host (y/n)? [n]: n
+[+] Is host (10.250.201.55) an etcd host (y/n)? [n]: y
+[+] Override Hostname of host (10.250.201.55) [none]:
+[+] Internal IP of host (10.250.201.55) [none]: 10.250.201.55
+[+] Docker socket path on host (10.250.201.55) [/var/run/docker.sock]:
+[+] SSH Address of host (2) [none]: 10.250.207.170
+[+] SSH Port of host (2) [22]:
+[+] SSH Private Key Path of host (10.250.207.170) [none]: ~/.ssh/id_rsa
+[+] SSH User of host (10.250.207.170) [ubuntu]: centos
+[+] Is host (10.250.207.170) a Control Plane host (y/n)? [y]: n
+[+] Is host (10.250.207.170) a Worker host (y/n)? [n]: y
+[+] Is host (10.250.207.170) an etcd host (y/n)? [n]: n
+[+] Override Hostname of host (10.250.207.170) [none]:
+[+] Internal IP of host (10.250.207.170) [none]: 10.250.207.170
+[+] Docker socket path on host (10.250.207.170) [/var/run/docker.sock]:
+[+] Network Plugin Type (flannel, calico, weave, canal, aci) [canal]: calico
 [+] Authentication Strategy [x509]:
-
 [+] Authorization Mode (rbac, none) [rbac]:
-
-[+] Kubernetes Docker image [rancher/hyperkube:v1.18.3-rancher2]:
-
+[+] Kubernetes Docker image [rancher/hyperkube:v1.20.8-rancher1]:
 [+] Cluster domain [cluster.local]:
-
 [+] Service Cluster IP Range [10.43.0.0/16]:
-
 [+] Enable PodSecurityPolicy [n]:
-
 [+] Cluster Network CIDR [10.42.0.0/16]:
-
 [+] Cluster DNS Service IP [10.43.0.10]:
-
 [+] Add addon manifest URLs or YAML files [no]:
+
 ```
 ### RKE install
 - 위에서 생성된 cluster.yml을 이용해서 install 된다.
