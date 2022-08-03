@@ -3,8 +3,10 @@
 - docker가 모든 노드에 설치되어야 하고 계정 권한 설정이 필요함
 ```
 #centos 기준
-yum install -y yum-utils yum-config-manager \ --add-repo \ https://download.docker.com/linux/centos/docker-ce.repo
-
+yum install -y yum-utils
+yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
 yum install docker-ce docker-ce-cli containerd.io
 
 systemctl start docker 
