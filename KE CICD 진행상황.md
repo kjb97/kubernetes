@@ -88,7 +88,10 @@ pipeline {
 ```
 
 - 허나, stage('build') 부분에서 해당 에러가 발생합니다.
-```[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.8.0:compile (default-compile) on project demo: Fatal error compiling: invalid target release: 11 -> [Help 1]```
+
+```
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.8.0:compile (default-compile) on project demo: Fatal error compiling: invalid target release: 11 -> [Help 1]
+```
 - build를 수행하는 container의 자바 버전이 1.8로 올라오기 때문에 자바 버전 에러라고 생각되어 container의 자바 버전을 11로 업그레이드 하는 작업을 추가해봤습니다.
 ```
         stage('build') {
