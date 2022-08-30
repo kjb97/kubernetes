@@ -37,69 +37,73 @@
 ### Jenkinsfile
 ```
 pipeline {
- environment {
- DOCKER_REGISTRY = 'https:///'
- }
- agent {
- label 'maven'
- }
- stages {
- stage('clone'){
- steps {
- sh 'git clone https://github.com/amrityam/spring-boot-reactjs-kubernetes.git'
- }
- }
- stage('build') {
- steps {
- container ('maven'){
- sh 'mvn --version'
- sh 'mvn clean install'
- }
- }
- } 
- stage('build docker image'){
- steps{
- container ('maven'){
- script{
- echo 'make docker image'
- docker_image_name = "${DOCKER_REGISTRY}/demo-corona-backend-spring-app"
- builded_dockerimage = docker.build("${docker_image_name}")
- }
- } 
- }
- }
- stage("push dockerimage"){
- steps{
- container ('maven'){
- script{
- docker.withRegistry('https:///msa_demo_app', 'harbor'){
- builded_dockerimage.push()
- }
- sh "docker rmi ${docker_image_name}"
- }
- }
- }
- }
- }
+
+    environment {
+        DOCKER_REGISTRY = 'https://15.165.3.251:30003/'
+    }
+
+    agent {
+        label 'maven'
+    }
+
+    stages {
+        stage('clone'){
+            steps {
+                sh 'git clone https://github.com/amrityam/spring-boot-reactjs-kubernetes.git'
+            }
+        }
+        stage('build') {
+            steps {
+                container ('maven'){
+                    sh 'mvn --version'
+                    sh 'mvn clean install'
+                }
+            }
+        }        
+        stage('build docker image'){
+            steps{
+                container ('maven'){
+                    script{
+                      echo 'make docker image'
+                      docker_image_name = "${DOCKER_REGISTRY}/demo-corona-backend-spring-app"
+                      builded_dockerimage = docker.build("${docker_image_name}")
+                    }
+                }       
+            }
+        }
+        stage("push dockerimage"){
+            steps{
+                container ('maven'){
+                  script{
+                      docker.withRegistry('https://15.165.3.251:30003/msa_demo_app', 'harbor'){
+                          builded_dockerimage.push()
+                      }
+                      sh "docker rmi ${docker_image_name}"
+                  }
+                }
+            }
+        }
+    }
 }
 ```
+
 - 허나, stage('build') 부분에서 해당 에러가 발생합니다.
 ```[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.8.0:compile (default-compile) on project demo: Fatal error compiling: invalid target release: 11 -> [Help 1]```
 - build를 수행하는 container의 자바 버전이 1.8로 올라오기 때문에 자바 버전 에러라고 생각되어 container의 자바 버전을 11로 업그레이드 하는 작업을 추가해봤습니다.
 ```
- stage('build') {
- steps {
- container ('maven'){
- sh 'mvn --version'
- sh 'yum install java-11-openjdk-devel.x86_64 -y'
- sh 'update-alternatives --config java <<< 3'
- sh 'update-alternatives --config javac <<< 3'
- sh 'java -version && javac -version'
- sh 'mvn --version'
- sh 'mvn clean install'
- }
- }
- }
+        stage('build') {
+            steps {
+                container ('maven'){
+                    sh 'mvn --version'
+                    sh 'yum install java-11-openjdk-devel.x86_64 -y'
+                    sh 'update-alternatives --config java <<< 3'
+                    sh 'update-alternatives --config javac <<< 3'
+                    sh 'java -version && javac -version'
+                    sh 'mvn --version'
+                    sh 'mvn clean install'
+                }
+            }
+        }    
 ```
 - 자바 버전은 성공적으로 업그레이드 되었으나 여전히 build에서 같은 에러가 발생했습니다.
 - KE 초기화 이후 [Callicoder Application](https://gitlab.kuberix.co.kr/kuberix/callicoder)을 이용해서 새로 파이프라인 테스트를 진행하려 했으나 KE 초기화 이후 파이프라인을 run 하는 순간 running 상태이던 KE의 Jenkins가 CrashLoofBack 상태가 되어 테스트가 불가한 상태입니다.
