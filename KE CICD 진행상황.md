@@ -39,7 +39,7 @@
 pipeline {
 
     environment {
-        DOCKER_REGISTRY = 'https://15.165.3.251:30003/'
+        DOCKER_REGISTRY = '/'
     }
 
     agent {
@@ -75,7 +75,7 @@ pipeline {
             steps{
                 container ('maven'){
                   script{
-                      docker.withRegistry('https://15.165.3.251:30003/msa_demo_app', 'harbor'){
+                      docker.withRegistry('/msa_demo_app', 'harbor'){
                           builded_dockerimage.push()
                       }
                       sh "docker rmi ${docker_image_name}"
