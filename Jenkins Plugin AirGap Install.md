@@ -25,4 +25,4 @@ done
 ## 3. 폐쇄망 이동후 업로드 
 - UI에서 Jenkins 관리 -> Plugin managed -> 고급 -> 업로드를 통해 하나씩 올리거나
 
-- 
+- Jenkins 컨테이너 내 /var/jenkins_home/plugins 에 직접 
