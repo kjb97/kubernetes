@@ -1,4 +1,4 @@
-# Docker Offline Install (ubuntu)
+# Docker AirGap Install (ubuntu)
 ### 1. Release 확인 및 다운
 [docker deb packages](https://download.docker.com/linux/ubuntu/dists/)
 
