@@ -67,7 +67,7 @@ metadata:
   name: sample
 spec:
   hosts:
-  - {name: node1, address: 192.168.208.145, internalAddress: 192.168.208.145, user: jinseong, password: "1234"} # node의 접근 정보를 입력합니다. 
+  - {name: node1, address: 192.168.208.145, internalAddress: 192.168.208.145, user: koo, password: "1234"} # node의 접근 정보를 입력합니다. 
   - {name: node2, address: 192.168.208.146, internalAddress: 192.168.208.146, user: koo, password: "1234"}
   - {name: node3, address: 192.168.208.147, internalAddress: 192.168.208.147, user: koo, password: "1234"}
   roleGroups:
