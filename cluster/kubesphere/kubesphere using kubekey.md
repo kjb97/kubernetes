@@ -56,7 +56,7 @@ $ ./kk create config [--with-kubernetes version] [--with-kubesphere version] [(-
 
 -   이 단계에서 명령에 플래그를 추가하지 않으면 구성 파일의 필드를 사용하여 설치하거나 나중에 사용할 때 이 플래그를 다시 추가  `--with-kubesphere`하지 않는 한 KubeSphere는 배포되지 않음
 ```
-$ ./kk create config --with-kubernetes version v1.23.7  --with-kubesphere v3.3.0
+$ ./kk create config --with-kubernetes v1.23.7  --with-kubesphere v3.3.0
 ```
 
 ```
