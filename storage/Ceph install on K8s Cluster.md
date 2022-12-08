@@ -46,6 +46,10 @@ kubectl create -f csi/cephfs/storageclass.yaml
 kubectl get cephcluster -A
 ```
 
+- 5. default storageClass 설정
+```
+kubectl patch storageclass rook-ceph-block  -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+```
 
 ## 기타 
 - ceph tool 사용 커맨드 ( toolbox 컨테이너 진입 )
