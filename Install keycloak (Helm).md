@@ -46,7 +46,7 @@ metadata:
 spec:
   tls:
     - hosts:
-        - keycloak.test.cloak.com
+        - keycloak.test.com
       secretName: tls-keycloak
   rules:
     - host: keycloak.test.com
