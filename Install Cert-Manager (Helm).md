@@ -10,7 +10,7 @@ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/
 
 helm pull jetstack/cert-manager --version v1.10.0 --untar
 
-helm upgrage --install  \
+helm upgrade --install  \
  cert-manager . \
  --namespace cert-manager \
  --create-namespace \
