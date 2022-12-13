@@ -46,10 +46,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - keycloak.keycloak.gantry.ai
+        - keycloak.test.cloak.com
       secretName: tls-keycloak
   rules:
-    - host: keycloak.keycloak.gantry.ai
+    - host: keycloak.test.com
       http:
         paths:
           - path: /
