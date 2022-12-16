@@ -1,4 +1,4 @@
-# kubernetes gitlab 설치 ( helm chart )
+# Air-Gap gitlab install (helm).md
 ## 1. Install 
 ### 1.1 gitlab을 설치할  namespace 생성
 ```
