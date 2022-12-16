@@ -72,7 +72,8 @@ docker pull 192.168.xx.xx:5000/test:1.0
 ```
 
 ### 오류:  Get "https://192.168.xx.xx:5000/v2/": http: server gave HTTP response to HTTPS client 
-
+- docker의 pull은 기본적으로 https
+- ssl을 secret으로 적용할 게 아니라면 inscure 설정을 
 - /etc/docker 디렉터리에 daemon.json 파일을 추가
 
 ```
