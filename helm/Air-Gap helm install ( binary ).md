@@ -1,4 +1,4 @@
-# helm-offline-install
+# Air-Gap helm install
 ### 1. Release 확인 및 다운
 - 릴리즈 [enter link description here](https://github.com/helm/helm/releases)
 ```
