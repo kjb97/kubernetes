@@ -1,4 +1,4 @@
-# Air-rGap install using helm
+# Air-rGap install using helm ( guide )
 - 폐쇄망 환경에서 helm 차트를 이용한 설치 방법입니다.
 - 기본적으로 설치에 필요한 모든 파일은 외부 연결이 가능한 곳에서 받은 다음 폐쇄망으로 옮겨야 합니다.
 
