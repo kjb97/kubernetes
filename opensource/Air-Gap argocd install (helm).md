@@ -1,4 +1,4 @@
-# Argo-CD offline install 
+# Air-Gap argocd install (helm)
 ## 1. 외부 서버에서 필요 이미지 및 helm Chart 받기
 ```
  docker pull quay.io/argoproj/argocd:v2.4.0
