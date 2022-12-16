@@ -1,5 +1,5 @@
 
-# rke2 nginx-ingress offline install(helm)
+# Air-Gap nginx-ingress install(helm)
 ## 1. 외부에서 차트 받기
 ```
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
