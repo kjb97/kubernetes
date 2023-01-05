@@ -15,7 +15,7 @@ pipeline {
     stage('Clone') {
       agent none
       steps {
-        git(url: 'http://gitlab.test.co.kr/test/test-platform-ui.git', credentialsId: 'ke-ui', branch: 'develop', changelog: true, poll: false)
+        git(url: 'http://gitlab.test.co.kr/test/test-platform-ui.git', credentialsId: 'test', branch: 'develop', changelog: true, poll: false)
    
       }
     }
