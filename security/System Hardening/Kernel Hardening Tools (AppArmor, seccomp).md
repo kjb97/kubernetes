@@ -27,7 +27,7 @@ openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
 
 ~~~
 ```
-| 첫줄을 보면 execve라는 syscall을 호출했고 뒤에 넘긴 파라미터들이 출력.
+| 첫줄을 보면 execve라는 syscall을 호출했고 뒤에 넘긴 파라미터들이 출력. </br>
 | 19 vars 는 19개 변수는 사용자 쉘에 정의된 ENV 변수로 시스템 환경변수. 
 
 - 실행중인 프로세스는 프로세스의 PID를 이용해 확인할 수 있다.
