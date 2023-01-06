@@ -27,11 +27,11 @@ boolean 타입으로 반환하며 권한이 있는가? 만을 판단한다.
 
 
 # kubernetes OPA 
-- 흐름
-| 사용자가 쿠버네티스로 요청을 보내면
-| input이라는 객체를 통해 kubernetes의 AdmissionReview라는 Json 객체가 OPA로 전달된다.
-| 해당 Json 객체는 사용자가 요청한 전체 스펙이 정의되어 있다.
-| OPA는 관리자가 Rego로 정의한 정책을 이용해 사용자의 요청이 이에 부합하는 지 판단하여 결과를 반환한다.
+- 흐름 </br>
+| 사용자가 쿠버네티스로 요청을 보내면 </br>
+| input이라는 객체를 통해 kubernetes의 AdmissionReview라는 Json 객체가 OPA로 전달된다. </br>
+| 해당 Json 객체는 사용자가 요청한 전체 스펙이 정의되어 있다.</br>
+| OPA는 관리자가 Rego로 정의한 정책을 이용해 사용자의 요청이 이에 부합하는 지 판단하여 결과를 반환한다.</br>
 
 ## 1. OPA install
 
