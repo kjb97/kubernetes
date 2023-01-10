@@ -163,3 +163,46 @@ default.json -> https://github.com/docker/labs/tree/master/security/seccomp/secc
 | docker의 기본 설정은  X86 아키텍처에서 300개 이상의 SYSCALLS 중  reboot, setting and manipulating the system clock 같은 약 60개를 차단.  
 
 # **Kubernetes Seccomp**
+/var/lib/kubelet/seccomp에 default Seccomp profile이 위치.  
+kubernetes 1.20부터 기본적으로 seccomp는 off 상태.  
+securityContext를 사용해서 pod에 적용.
+https://kubernetes.io/docs/tutorials/security/seccomp/
+
+- pod 적용 예시
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: nginx
+  name: audit-nginx
+spec:
+  securityContext:
+    seccompProfile:
+      type: Localhost
+      localhostProfile: profiles/audit.json
+  containers:
+  - image: nginx
+    name: nginx
+```
+
+# **AppArmor**
+seccomp를 사용하여 컨테이너가 사용할 수 있거나 사용할 수 없는 syscall을 효과적으로 제한할 수 있지만  
+파일이나 디렉터리와 같은 특정 개체에 대한 프로그램의 액세스를 제한하는 데 사용할 수는 없다.  
+사용자 정의 profile을 사용하여 mkdir sys 호출을 제한함으로써  
+컨테이너가 내부에 디렉토리를 생성하는 것을 막을 수 있다.
+그러나 파일 시스템이나 특정 디렉토리에 쓰지 못하도록 제한하는 보다 섬세한 컨트롤은 할 수 없다.
+
+AppArmor는 프로그램을 제한된 리소스 집합으로 제한하는 데 사용되는 Linux 보안 모듈.
+AppArmor는 대부분의 Linux 배포판에 기본적으로 설치.  
+```
+systemctl status AppArmor 
+```
+AppArmor를 사용하려면 컨테이너가 실행될 모든 노드에 AppArmor 커널 모듈을 로드.
+이제 /sys/module/apparmor/parameters 디렉토리에서 활성화된 파일을 확인하여 확인  
+Y 또는 yes 값은 AppArmor 커널 모듈이 로드되었음을 의미.  
+seccomp와 마찬가지로 AppArmor는 profile을 통해 응용 프로그램에 적용.  
+ /sys/kernel/security/AppArmor/profiles 파일을 확인하여 확인.  
+
+
+
