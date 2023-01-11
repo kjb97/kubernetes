@@ -1,14 +1,14 @@
 # **Linux Syscall**
-커널은 하드웨어와 프로세스 사이의 핵심 인터페이스.
-둘 사이에서 통신하여 리소스를 효율적으로 관리.
-커널은 커널 공간과 사용자 공간 두 개의 메모리 영역을 가짐.
-예를 들어 C, 자바, 등으로 만들어진 애플리케이션, 사용자가 실행하는 프로세스와 같은 애플리케이션은 사용자 공간 내에서 실행.
-커널 자체는 커널 공간 내에서 실행되며 커널 코드, 커널 확장, 장치 드라이버 포함
+커널은 하드웨어와 프로세스 사이의 핵심 인터페이스.  
+둘 사이에서 통신하여 리소스를 효율적으로 관리.  
+커널은 커널 공간과 사용자 공간 두 개의 메모리 영역을 가짐.  
+예를 들어 C, 자바, 등으로 만들어진 애플리케이션, 사용자가 실행하는 프로세스와 같은 애플리케이션은 사용자 공간 내에서 실행.  
+커널 자체는 커널 공간 내에서 실행되며 커널 코드, 커널 확장, 장치 드라이버 포함    
 
-예를 들어, 응용 프로그램이 메모리 또는 디스크에 저장된 파일을 열고 데이터를 쓰기가 필요한 경우,
-사용자 공간에서 실행되는 응용 프로그램은 syscall 커널에 특별한 요청을 함으로써 장치 데이터에 액세스.
-빈 파일 하나 생성에도 여러 syscall이 호출.
-대표적으로 touch 바이너리를 실행하는 Execve
+예를 들어, 응용 프로그램이 메모리 또는 디스크에 저장된 파일을 열고 데이터를 쓰기가 필요한 경우,  
+사용자 공간에서 실행되는 응용 프로그램은 syscall 커널에 특별한 요청을 함으로써 장치 데이터에 액세스.  
+빈 파일 하나 생성에도 여러 syscall이 호출.  
+대표적으로 touch 바이너리를 실행하는 Execve  
 
 # **프로세스에서 사용하는 syscall 추적**
 ## 1. strace
@@ -27,8 +27,8 @@ openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
 
 ~~~
 ```
-| 첫줄을 보면 execve라는 syscall을 호출했고 뒤에 넘긴 파라미터들이 출력.
-| 19 vars 는 19개 변수는 사용자 쉘에 정의된 ENV 변수로 시스템 환경변수. 
+| 첫줄을 보면 execve라는 syscall을 호출했고 뒤에 넘긴 파라미터들이 출력.  
+| 19 vars 는 19개 변수는 사용자 쉘에 정의된 ENV 변수로 시스템 환경변수.   
 
 - 실행중인 프로세스는 프로세스의 PID를 이용해 확인할 수 있다.
 ```
@@ -40,7 +40,7 @@ pidof etcd
 strace -p 2405220
 ~~~
 ```
-| strace는 요약이 가능
+| strace는 요약이 가능  
 ```
 # -c 옵션으로 요약
 strace -c -p 2405220
@@ -89,7 +89,7 @@ docker run --name tracee --rm --privileged --pid=host  \
 # **Restrict syscalls using seccomp (Secure Computing Mode)**
 현재 리눅스에는 약 435개의 SYSCALLS가 있으며 모두 사용자 공간에서 실행 중인 애플리케이션이 하드웨어 및 네트워킹 작업을 수행하는 데 사용할 수 있다.  
 실제로는 어떤 응용 프로그램도 이렇게 많은 SYSCALL을 사용하지 않고,  
-모든 SYSCALL에 대해서 프로그램이 액세스 권한을 갖는 것은 공격 표면을 증가시킬 수 있다.
+모든 SYSCALL에 대해서 프로그램이 액세스 권한을 갖는 것은 공격 표면을 증가시킬 수 있다.  
 SECCOMP는 리눅스 커널 레벨의 기능으로 컨테이너가 실행 가능한 syscall을 제한하는 역할.  
 
 ```
@@ -98,7 +98,7 @@ grep -i seccomp /boot/config-$(uname -r)
 
 ```
 
-- syscall 제한의 예시
+- syscall 제한의 예시  
 ```
 # 컨테이너 sh 연결
 docker run --rm -it docker/whalesay sh
@@ -126,12 +126,12 @@ Seccomp_filters:        1
 | 이런 식의 출력이 나온다.  
 | seccomp의 상태는 3가지이고 0은 비활성,  
 | 1은 read, write, exit 등을 제외한 거의 대부분의 syscall 차단,  
-| 2는 선택적으로 syscall 필터링  
+| 2는 선택적으로 syscall 필터링    
 
 # **Docker seccomp**
-도커는 기본적으로 컨테이너를 만들 때마다 기본적으로 사용하는 SECCOMP 필터를 가지고 있다.
-JSON 문서로 설명된 이 필터는 리눅스에서 300개 이상의 SYSCALLS 중 약 60개를 제한
-default.json -> https://github.com/docker/labs/tree/master/security/seccomp/seccomp-profiles
+도커는 기본적으로 컨테이너를 만들 때마다 기본적으로 사용하는 SECCOMP 필터를 가지고 있다.  
+JSON 문서로 설명된 이 필터는 리눅스에서 300개 이상의 SYSCALLS 중 약 60개를 제한  
+default.json -> https://github.com/docker/labs/tree/master/security/seccomp/seccomp-profiles  
 
 ```
 {
@@ -160,13 +160,14 @@ default.json -> https://github.com/docker/labs/tree/master/security/seccomp/secc
 | 응용프로그램에서 이 배열에 정의된 SYSCALLS만   사용할 수 있음.  
 | "defaultAction"이 "SCMP_ACT_ERRNO"이면 whitelist 방식이고 "SCMP_ACT_ALLOW"이면 blacklist 방식. 
 | 프로그램이 필요한 SYSCALL이 추가되어 있지 않으면 프로그램이 동작하지 않을 수 있다.  
-| docker의 기본 설정은  X86 아키텍처에서 300개 이상의 SYSCALLS 중  reboot, setting and manipulating the system clock 같은 약 60개를 차단.  
+| docker의 기본 설정은  X86 아키텍처에서 300개 이상의 SYSCALLS 중  
+| reboot, setting and manipulating the system clock 같은 약 60개를 차단.  
 
 # **Kubernetes Seccomp**
 /var/lib/kubelet/seccomp에 default Seccomp profile이 위치.  
 kubernetes 1.20부터 기본적으로 seccomp는 off 상태.  
-securityContext를 사용해서 pod에 적용.
-https://kubernetes.io/docs/tutorials/security/seccomp/
+securityContext를 사용해서 pod에 적용.  
+https://kubernetes.io/docs/tutorials/security/seccomp/  
 
 - pod 적용 예시
 ```
@@ -190,34 +191,34 @@ spec:
 seccomp를 사용하여 컨테이너가 사용할 수 있거나 사용할 수 없는 syscall을 효과적으로 제한할 수 있지만  
 파일이나 디렉터리와 같은 특정 개체에 대한 프로그램의 액세스를 제한하는 데 사용할 수는 없다.  
 사용자 정의 profile을 사용하여 mkdir sys 호출을 제한함으로써  
-컨테이너가 내부에 디렉토리를 생성하는 것을 막을 수 있다.
-그러나 파일 시스템이나 특정 디렉토리에 쓰지 못하도록 제한하는 보다 섬세한 컨트롤은 할 수 없다.
+컨테이너가 내부에 디렉토리를 생성하는 것을 막을 수 있다.  
+그러나 파일 시스템이나 특정 디렉토리에 쓰지 못하도록 제한하는 보다 섬세한 컨트롤은 할 수 없다.    
 
-AppArmor는 프로그램을 제한된 리소스 집합으로 제한하는 데 사용되는 Linux 보안 모듈.
-AppArmor는 Linux 배포판에 기본적으로 설치.  
+AppArmor는 프로그램을 제한된 리소스 집합으로 제한하는 데 사용되는 Linux 보안 모듈.  
+AppArmor는 Linux 배포판에 기본적으로 설치.    
 ```
 systemctl status AppArmor 
 ```
-AppArmor를 사용하려면 컨테이너가 실행될 모든 노드에 AppArmor 커널 모듈을 로드.
+AppArmor를 사용하려면 컨테이너가 실행될 모든 노드에 AppArmor 커널 모듈을 로드.  
 /sys/module/apparmor/parameters 디렉토리에서 활성화된 파일을 확인하여 확인   
 seccomp와 마찬가지로 AppArmor는 profile을 통해 응용 프로그램에 적용.  
-/sys/kernel/security/AppArmor/profiles 파일을 확인하여 확인.  
+/sys/kernel/security/AppArmor/profiles 파일을 확인하여 확인.    
 
-- 3가지 모드
- | enforce : 프로파일에 맞는 응용 프로그램에서 규칙을 모니터링하고 적용.
- | complain : 응용 프로그램이 제한 없이 작업을 수행하도록 허용하지만, 로그를 남김.
- | unconfined : 응용 프로그램이 모든 작업을 수행 가능.
+- 3가지 모드  
+ | enforce : 프로파일에 맞는 응용 프로그램에서 규칙을 모니터링하고 적용.  
+ | complain : 응용 프로그램이 제한 없이 작업을 수행하도록 허용하지만, 로그를 남김.  
+ | unconfined : 응용 프로그램이 모든 작업을 수행 가능.    
 
- - apparmor 적용 예시
-  다음과 같은 스크립트가 있다고 하면,
+ - apparmor 적용 예시  
+  다음과 같은 스크립트가 있다고 하면,  
  ```
  #!/bin/bash
 data_directory=/opt/app/data
 mkdir -p ${data_directory}
 echo "=> create file at 'date'" | tee ${data_directory}/create.log
  ```
-  실행이 정상적으로 동작.
-  여기서 apparmor 규칙을 적용해본다.
+  실행이 정상적으로 동작.  
+  여기서 apparmor 규칙을 적용해본다.  
 
 
 # **kubernetes AppArmor**
@@ -232,7 +233,7 @@ Kubernetes에서 팟을 실행할 때, 기본적으로 seccomp를 사용하지 �
 프로세스는 권한 있는 프로세스와 권한 없는 프로세스로 나뉜다.    
 
 권한 있는 프로세스는 UID가 0인 루트 사용자에 의해 실행된 프로세스이며 서버에서 거의 모든 작업을 수행할 수 있다.  
-권한이 없는 프로세스는 UID가 0이 아닌 다른 사용자가 실행한 프로세스로
+권한이 없는 프로세스는 UID가 0이 아닌 다른 사용자가 실행한 프로세스로  
 커널에 의해 부과된 많은 제한이 있었다.    
 
 리눅스 커널 2.2부터 슈퍼 유저의 권한은 기능으로 알려진 별개의 단위로 나뉘었다.  
@@ -244,16 +245,16 @@ net_admin 기능을 사용하면 네트워크 인터페이스 구성, 라우팅 
 sys_boot 기능을 사용하면 프로세스가 시스템을 재부팅할 수 있다.  
 이러한 기능에는 수십 가지가 있으며 각 그룹은 기능 기반으로 되어있다.    
 
-예로, ping 명령이 net_raw 기능을 사용한다는 것을 알 수 있다. 
+예로, ping 명령이 net_raw 기능을 사용한다는 것을 알 수 있다.  
 ```
 ~# getcap /usr/bin/ping
 /usr/bin/ping = cap_net_raw+ep
 ```    
 
 컨테이너가 루트 사용자로 실행되더라도 제한된 기능 집합으로 시작되기 때문에  
-Docker의 경우, 컨테이너는 기본적으로 14개의 기능으로만 시작되며 sys_time 기능을 포함하지 않는다.
-컨테이너 매니페스트의 securityContext에서 capabilities 필드를 지정하여 컨테이너에 대한 기능을 추가하거나 제거할 수 있다.
-즉, 아까처럼 컨테이너에서 date를 수정하려면 SYS_TIME을 추가해야 한다.
+Docker의 경우, 컨테이너는 기본적으로 14개의 기능으로만 시작되며 sys_time 기능을 포함하지 않는다.  
+컨테이너 매니페스트의 securityContext에서 capabilities 필드를 지정하여 컨테이너에 대한 기능을 추가하거나 제거할 수 있다.  
+즉, 아까처럼 컨테이너에서 date를 수정하려면 SYS_TIME을 추가해야 한다.    
 - capabilities 추가
 ```
 apiVersion: v1
@@ -271,9 +272,9 @@ spec:
          
 </br>
 </br>
-### Apparmor profile 적용
+### Apparmor profile 적용    
 ### nginx.yaml
-- container.apparmor.security.beta.kubernetes.io 어노테이션을 통해 apparmor profile 적용.
+- container.apparmor.security.beta.kubernetes.io 어노테이션을 통해 apparmor profile 적용.  
 ```
 apiVersion: v1
 kind: Pod
@@ -290,7 +291,7 @@ spec:
     imagePullPolicy: IfNotPresent
     name: nginx
 ```
-| custom-nginx라는 profile이 로드되지 않으면 pod는 error 상태가 된다.
+| custom-nginx라는 profile이 로드되지 않으면 pod는 error 상태가 된다.    
 
 ### custom-nginx ( /etc/apparmor.d/usr.sbin.nginx )
 ```
