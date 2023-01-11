@@ -194,15 +194,173 @@ seccomp를 사용하여 컨테이너가 사용할 수 있거나 사용할 수 �
 그러나 파일 시스템이나 특정 디렉토리에 쓰지 못하도록 제한하는 보다 섬세한 컨트롤은 할 수 없다.
 
 AppArmor는 프로그램을 제한된 리소스 집합으로 제한하는 데 사용되는 Linux 보안 모듈.
-AppArmor는 대부분의 Linux 배포판에 기본적으로 설치.  
+AppArmor는 Linux 배포판에 기본적으로 설치.  
 ```
 systemctl status AppArmor 
 ```
 AppArmor를 사용하려면 컨테이너가 실행될 모든 노드에 AppArmor 커널 모듈을 로드.
-이제 /sys/module/apparmor/parameters 디렉토리에서 활성화된 파일을 확인하여 확인  
-Y 또는 yes 값은 AppArmor 커널 모듈이 로드되었음을 의미.  
+/sys/module/apparmor/parameters 디렉토리에서 활성화된 파일을 확인하여 확인   
 seccomp와 마찬가지로 AppArmor는 profile을 통해 응용 프로그램에 적용.  
- /sys/kernel/security/AppArmor/profiles 파일을 확인하여 확인.  
+/sys/kernel/security/AppArmor/profiles 파일을 확인하여 확인.  
+
+- 3가지 모드
+ | enforce : 프로파일에 맞는 응용 프로그램에서 규칙을 모니터링하고 적용.
+ | complain : 응용 프로그램이 제한 없이 작업을 수행하도록 허용하지만, 로그를 남김.
+ | unconfined : 응용 프로그램이 모든 작업을 수행 가능.
+
+ - apparmor 적용 예시
+  다음과 같은 스크립트가 있다고 하면,
+ ```
+ #!/bin/bash
+data_directory=/opt/app/data
+mkdir -p ${data_directory}
+echo "=> create file at 'date'" | tee ${data_directory}/create.log
+ ```
+  실행이 정상적으로 동작.
+  여기서 apparmor 규칙을 적용해본다.
 
 
+# **kubernetes AppArmor**
+파드가 올라갈 모든 노드에서 AppArmor 커널 모듈을 사용하도록 설정.  
+kubernetes cri도 apparmor를 지원해야 함. ( docker, cri-o, containerd )    
+
+Kubernetes에서 팟을 실행할 때, 기본적으로 seccomp를 사용하지 않는다.  
+그런데 컨테이너가 UID가 0인 루트 사용자로 실행되고 있음에도 날짜를 변경할 수 없다.    
+
+리눅스에서 프로세스가 실행되는 방법을 보면,  
+커널이 2.2보다 오래된 리눅스 서버에서  
+프로세스는 권한 있는 프로세스와 권한 없는 프로세스로 나뉜다.    
+
+권한 있는 프로세스는 UID가 0인 루트 사용자에 의해 실행된 프로세스이며 서버에서 거의 모든 작업을 수행할 수 있다.  
+권한이 없는 프로세스는 UID가 0이 아닌 다른 사용자가 실행한 프로세스로
+커널에 의해 부과된 많은 제한이 있었다.    
+
+리눅스 커널 2.2부터 슈퍼 유저의 권한은 기능으로 알려진 별개의 단위로 나뉘었다.  
+루트 사용자가 생성한 모든 프로세스에 서버에서 모든 작업을 수행할 수 있는 권한을 부여하는 대신,  
+프로세스에 일부 기능만 할당할 수 있다.    
+
+예를 들어 CHOWN 기능을 사용하면 파일에 사용자 및 그룹 소유권을 변경할 수 있다. 
+net_admin 기능을 사용하면 네트워크 인터페이스 구성, 라우팅 테이블 수정, 주소 바인딩 프로세스 등과 같은 다양한 네트워크 관련 작업을 수행.  
+sys_boot 기능을 사용하면 프로세스가 시스템을 재부팅할 수 있다.  
+이러한 기능에는 수십 가지가 있으며 각 그룹은 기능 기반으로 되어있다.    
+
+예로, ping 명령이 net_raw 기능을 사용한다는 것을 알 수 있다. 
+```
+~# getcap /usr/bin/ping
+/usr/bin/ping = cap_net_raw+ep
+```    
+
+컨테이너가 루트 사용자로 실행되더라도 제한된 기능 집합으로 시작되기 때문에  
+Docker의 경우, 컨테이너는 기본적으로 14개의 기능으로만 시작되며 sys_time 기능을 포함하지 않는다.
+컨테이너 매니페스트의 securityContext에서 capabilities 필드를 지정하여 컨테이너에 대한 기능을 추가하거나 제거할 수 있다.
+즉, 아까처럼 컨테이너에서 date를 수정하려면 SYS_TIME을 추가해야 한다.
+- capabilities 추가
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: security-context-demo
+spec:
+  containers:
+  - name: sec-ctx
+    image: gcr.io/google-samples/node-hello:1.0
+    securityContext:
+      capabilities:
+        add: ["SYS_TIME"]
+```
+         
+- apparmor profile 적용
+### nginx.yaml
+- container.apparmor.security.beta.kubernetes.io 어노테이션을 통해 apparmor profile 적용.
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/nginx: localhost/custom-nginx
+  labels:
+    run: nginx
+  name: nginx
+  namespace: default
+spec:
+  containers:
+  - image: nginx:alpine
+    imagePullPolicy: IfNotPresent
+    name: nginx
+```
+| custom-nginx라는 profile이 로드되지 않으면 pod는 error 상태가 된다.
+
+### custom-nginx ( /etc/apparmor.d/usr.sbin.nginx )
+```
+#include <tunables/global>
+
+profile custom-nginx flags=(attach_disconnected,mediate_deleted) {
+  #include <abstractions/base>
+
+  network inet tcp,
+  network inet udp,
+  network inet icmp,
+
+  deny network raw,
+
+  deny network packet,
+
+  file,
+  umount,
+
+  deny /bin/** wl,
+  deny /boot/** wl,
+  deny /dev/** wl,
+  deny /etc/** wl,
+  deny /home/** wl,
+  deny /lib/** wl,
+  deny /lib64/** wl,
+  deny /media/** wl,
+  deny /mnt/** wl,
+  deny /opt/** wl,
+  deny /proc/** wl,
+  deny /root/** wl,
+  deny /sbin/** wl,
+  deny /srv/** wl,
+  deny /tmp/** wl,
+  deny /sys/** wl,
+  deny /usr/** wl,
+
+  audit /** w,
+
+  /var/run/nginx.pid w,
+
+  /usr/sbin/nginx ix,
+
+  deny /bin/dash mrwklx,
+  deny /bin/sh mrwklx,
+  deny /usr/bin/top mrwklx,
+
+
+  capability chown,
+  capability dac_override,
+  capability setuid,
+  capability setgid,
+  capability net_bind_service,
+
+  deny @{PROC}/{*,**^[0-9*],sys/kernel/shm*} wkx,
+  deny @{PROC}/sysrq-trigger rwklx,
+  deny @{PROC}/mem rwklx,
+  deny @{PROC}/kmem rwklx,
+  deny @{PROC}/kcore rwklx,
+  deny mount,
+  deny /sys/[^f]*/** wklx,
+  deny /sys/f[^s]*/** wklx,
+  deny /sys/fs/[^c]*/** wklx,
+  deny /sys/fs/c[^g]*/** wklx,
+  deny /sys/fs/cg[^r]*/** wklx,
+  deny /sys/firmware/efi/efivars/** rwklx,
+  deny /sys/kernel/security/** rwklx,
+}
+```
+
+### profile 로드
+```
+apparmor_parser -q /etc/apparmor.d/usr.sbin.nginx
+```
 
