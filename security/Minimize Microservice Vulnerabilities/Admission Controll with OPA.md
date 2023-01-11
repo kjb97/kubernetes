@@ -1,7 +1,7 @@
-- 참조 : OPA Docs https://www.openpolicyagent.org/docs/latest/kubernetes-tutorial/
+- 참조 : OPA Docs https://www.openpolicyagent.org/docs/latest/kubernetes-tutorial/        
 
 
-# Admission Controll
+# **Admission Controll**
 
 인가(Authentication)된 사용자에 대해서 관리자가 추가적인 제한(validate) 혹은 변경(mutate)하는 작업
 Admission Controller는 Admission Controll을 수행하는 주체이고 예를 들면,
@@ -18,7 +18,7 @@ Admission Controller는 WebHook으로 API가 열려있고 custom이 가능하다
  예를 들어 사용자가 외부 이미지 registry를 사용하면 해당 요청을 반려 할 수 있다.
 
 
-# OPA
+# **OPA**
 
 application에서 인증(Authentication) 이후에 인가(Authorization)에 관한 내용을 코드로 정의하여 보안, 운영, 자동화를 가능하게 한다.
 boolean 타입으로 반환하며 권한이 있는가? 만을 판단한다.
@@ -26,7 +26,7 @@ boolean 타입으로 반환하며 권한이 있는가? 만을 판단한다.
 서비스에서 Json으로 질의하고 Rego 언어의 Policy 파일과 Json 데이터로 구성되어 있다.
 
 
-# kubernetes OPA 
+# **kubernetes OPA**
 - 흐름 </br>
 | 사용자가 쿠버네티스로 요청을 보내면 </br>
 | input이라는 객체를 통해 kubernetes의 AdmissionReview라는 Json 객체가 OPA로 전달된다. </br>
