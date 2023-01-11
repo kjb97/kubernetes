@@ -273,7 +273,7 @@ spec:
 </br>
 </br>
 ### Apparmor profile 적용    
-### nginx.yaml
+### nginx.yaml  
 - container.apparmor.security.beta.kubernetes.io 어노테이션을 통해 apparmor profile 적용.  
 ```
 apiVersion: v1
@@ -293,7 +293,7 @@ spec:
 ```
 | custom-nginx라는 profile이 로드되지 않으면 pod는 error 상태가 된다.    
 
-### custom-nginx ( /etc/apparmor.d/usr.sbin.nginx )
+### custom-nginx ( /etc/apparmor.d/usr.sbin.nginx )  
 ```
 #include <tunables/global>
 
@@ -362,7 +362,7 @@ profile custom-nginx flags=(attach_disconnected,mediate_deleted) {
 }
 ```
 
-### profile 로드
+### profile 로드  
 ```
 apparmor_parser -q /etc/apparmor.d/usr.sbin.nginx
 ```
