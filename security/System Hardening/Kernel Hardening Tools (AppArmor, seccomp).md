@@ -269,7 +269,9 @@ spec:
         add: ["SYS_TIME"]
 ```
          
-- apparmor profile 적용
+</br>
+</br>
+### Apparmor profile 적용
 ### nginx.yaml
 - container.apparmor.security.beta.kubernetes.io 어노테이션을 통해 apparmor profile 적용.
 ```
