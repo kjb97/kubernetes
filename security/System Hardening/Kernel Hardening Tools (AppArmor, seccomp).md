@@ -268,10 +268,9 @@ spec:
     securityContext:
       capabilities:
         add: ["SYS_TIME"]
-```
+```        
          
-</br>
-</br>
+
 ### Apparmor profile 적용    
 ### nginx.yaml  
 - container.apparmor.security.beta.kubernetes.io 어노테이션을 통해 apparmor profile 적용.  
@@ -290,7 +289,7 @@ spec:
   - image: nginx:alpine
     imagePullPolicy: IfNotPresent
     name: nginx
-```
+```  
 | custom-nginx라는 profile이 로드되지 않으면 pod는 error 상태가 된다.    
 
 ### custom-nginx ( /etc/apparmor.d/usr.sbin.nginx )  
@@ -360,10 +359,10 @@ profile custom-nginx flags=(attach_disconnected,mediate_deleted) {
   deny /sys/firmware/efi/efivars/** rwklx,
   deny /sys/kernel/security/** rwklx,
 }
-```
+```  
 
 ### profile 로드  
 ```
 apparmor_parser -q /etc/apparmor.d/usr.sbin.nginx
-```
+```  
 
