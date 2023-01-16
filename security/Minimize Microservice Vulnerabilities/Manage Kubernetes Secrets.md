@@ -60,8 +60,8 @@ spec:
     secret:
       secretName: mysecret
 ```    
-| etcd에도 secret 데이터는 저장되고  
-| secret은 절대 암호화된 값이 아닌 인코딩 값이다.  
-| 따라서 secret 암호화 설정이 필요하고  
-| rbac 설정을 통해 secret에 아무나 접근하지 못하도록 해야 함.  
+| **etcd에도 secret 데이터는 저장되고**  
+| **secret은 절대 암호화된 값이 아닌 인코딩 값이다.**  
+| **따라서 secret 암호화 설정이 필요하고**  
+| **rbac 설정을 통해 secret에 아무나 접근하지 못하도록 해야 함.**  
 
