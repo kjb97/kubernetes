@@ -178,7 +178,7 @@ kubeadm join 192.168.28.166:6443 --token u80qnm.e8e9mextvduwz71l \
 
 ## 7. CNI 설치
 - calico
-
+https://docs.tigera.io/calico/3.25/getting-started/kubernetes/self-managed-onprem/onpremises
 ```
 kubectl create -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
 kubectl create -f https://docs.projectcalico.org/manifests/custom-resources.yaml
