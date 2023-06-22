@@ -124,12 +124,11 @@ sudo kubeadm config images pull --cri-socket unix:///run/containerd/containerd.s
 
 ## 5. kubeadm init
 - 컨트롤플레인 노드 초기화
-- --pod-network-cidr은 cni plugin 설치를 위해 설정. calico를 설치할 것이기 때문에 192.168.0.0/16으로 지정.
 - --cri-socket 으로 containerd.sock 지정
 - --control-plane-endpoint 를 이용한 클러스터 endpoint 설정. 추후에 HA 설정을 위한 LB를 추가할 것이라면 반드시 해당 옵션을 지정해야 한다.
 ```
 sudo kubeadm init \
-  --pod-network-cidr=192.168.0.0/16 \
+  # --pod-network-cidr=192.168.0.0/16 \
   --cri-socket unix:///run/containerd/containerd.sock \
   --upload-certs \
   --control-plane-endpoint=192.168.xx.xx
